@@ -3,9 +3,14 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.all
+    posts = Post.all
+    posts_with_hola = posts.map do |post|
+      post.as_json(include: :images).merge(images: post.images.map do |image|
+        url_for(image)
+      end)
+    end
 
-    render json: @posts
+    render json: posts_with_hola
   end
 
   # GET /posts/1
